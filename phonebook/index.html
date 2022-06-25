@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./main.js"></script>
+    <link rel="stylesheet" href="./common.css" type="text/css">
+    <title>List</title>
+ 
+</head>
+
+<body>
+
+ 
+    <div  class="bodyContainer" >
+
+        <a href="/" class="basicButton" >
+                Home 
+        </a>
+ 
+        <hr>
+   
+
+
+        <div class="bodyContainer">
+
+            <div style="text-align:center;width:100%;">
+                <h2 style="margin:0 auto;">
+                    전화번호부 목록 
+                </h2>
+            </div>
+
+            
+            <div class="addBtnArea">
+                <a href="./addItem">
+                    <button>
+                        추가
+                    </button>
+                </a>
+ 
+            </div>
+ 
+            <table>
+                <thead>
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Phone 
+                    </th>
+                </thead>
+
+                <tbody id="itemListTbody">
+                </tbody>
+
+            </table>
+        </div>
+ 
+    </div>
+
+</div>
+
+  <div style="height:30px;"></div>
+
+</body>
+
+
+<script>
+
+    console.log("PhoneBook Version 1.07"); 
+    console.log("A1 apiInvokeBaseURL(defined at main.js)\n" + apiInvokeBaseURL); 
+    console.log("A2 apiBaseDirName(defined at main.js)\n" + apiBaseDirName); 
+ 
+    var ftime; // 종료시간 
+    var stime; // 시작시간 
+    var timeDiff; // 시간차이 
+
+     
+    // Sort-10 JSON배열 Id정렬 
+    function sortResponseIdAsc(paramArr) {
+        let sortedArr = paramArr; 
+        sortedArr.sort(function(A,B){return A.id - B.id }); 
+        return sortedArr; 
+    }; 
+
+
+    // Sort-11 JSON배열 역정렬 
+    function sortResponseIdDesc(paramArr) {
+        let sortedArr = paramArr; 
+        sortedArr.sort(function(A,B){return B.id - A.id }); 
+        return sortedArr; 
+    }; 
+  
+    // 전체 데이터를 받아와 목록태그들을 추가
+    const getAllData = async () => {
+ 
+        // 시작시간 측정 
+        stime = performance.now();
+
+        // API호출 주소 : 공통API주소 + 경로 
+        // OLD let apiTargetURL = `https://tdfont1pd2.execute-api.ap-northeast-2.amazonaws.com/items`;
+        let apiTargetURL = apiInvokeBaseURL + `/items`; 
+
+        // Lambda에서 데이터 받기위해 fetch (기본 GET)
+        const response = await fetch(apiTargetURL); 
+
+        // 받은 데이터를 json으로 변환
+        const resData = await response.json();
+
+        console.log("PhoneBook List ResponseData\n" + JSON.stringify(resData) ); 
+       
+        // ============= START OF ID기준정렬 ==================== 
+        // id기준정렬 
+        // console.log("ITEM-BEFORE\n" + JSON.stringify(resData.Items) ); 
+        let itemArr  = sortResponseIdAsc(resData.Items); 
+        // console.log("ITEM-AFTER\n" + JSON.stringify(itemArr) ); 
+        // 응답데이터 정렬데이터로 변경 
+        resData.Items = itemArr; 
+       // ============= END OF ID기준정렬 ==================== 
+
+        // 목록에 추가할 부모 태그 선택
+        const tbodyTag = document.getElementById('itemListTbody');
+
+        // 목록 개수만큼 반복
+        for (let cnt = 0; cnt < resData.Count; cnt++) {
+
+            // 목록 개수만큼 Tr태그 생성후 부모태그에 넣어줌
+            const makeTrTag = document.createElement('tr');
+
+            tbodyTag.appendChild(makeTrTag);
+
+            makeTrTag.addEventListener('click', (e) => {
+                // apiBaseDirName : main.js에 포함된 api기본 디렉토리  ex) phonebook 
+                document.location.href = `/${apiBaseDirName}/itemInfo/?itemId=${getData.id}`; 
+            });
+ 
+            // 데이터를 추가할 td태그 생성
+            const makeIdTag = document.createElement('td');
+            const makePhoneTag = document.createElement('td');
+            const makeNameTag = document.createElement('td');
+            const getData = resData.Items[cnt];  // 사용할 데이터
+
+            // 데이터에 텍스트를 추가
+            makeIdTag.textContent = getData.id;
+            makeNameTag.textContent = getData.name;
+            makePhoneTag.textContent = getData.phonenum;
+
+
+            // 텍스트를 더한 데이터를 tr태그에 넣어줌
+            makeTrTag.appendChild(makeIdTag);
+            makeTrTag.appendChild(makeNameTag);
+            makeTrTag.appendChild(makePhoneTag);
+            
+        };
+
+        // 종료시간측정 
+        ftime = performance.now();
+        timeDiff = ftime - stime; 
+		console.log(`##### Execution Time : ${timeDiff}ms`); 		
+
+    };
+
+    // 모든 데이터 가져오기 
+    getAllData();
+
+</script>
+
+</html>

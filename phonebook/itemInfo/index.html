@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../main.js"></script>
+    <script src="../getInputData.js"></script>
+    <link rel="stylesheet" href="../common.css" type="text/css">
+
+    <title>Read Item</title>
+</head>
+
+<body>
+
+    
+    <div class="bodyContainerWrap" >
+
+        <div  class="bodyContainer" >
+
+            <a href="../" class="basicButton" >
+                    목록으로 
+            </a>
+            <hr> 
+
+            <h2>
+                전화번호부 Information 
+            </h2>
+            <div class="userInfoArea">
+                <p id="itemId"></p>
+                <p id="userName"></p>
+                <p id="PhoneNum"></p>
+            </div>
+            <div class="itemInfoBtnArea">
+                <button onclick="updatePage(itemId)">수정</button>
+                <button onclick="deleteFetch(itemId)">삭제</button>
+            </div>
+
+
+        </div>
+    </div>
+
+ 
+
+    <script>
+        const urlParams = new URL(location.href).searchParams; // URL생성
+        const itemId = urlParams.get('itemId') || undefined; // itemId Param data 추출
+
+        // 사용자 정보 읽기
+        const readFetch = async (itemId) => {
+            
+            if (itemId !== undefined) {
+  
+                // API호출 주소 : 공통API주소 + 경로 
+                // OLD let apiTargetURL = `https://tdfont1pd2.execute-api.ap-northeast-2.amazonaws.com/items/${itemId}`;
+                let apiTargetURL = apiInvokeBaseURL + `/items/${itemId}`; 
+ 
+                // API데이터 패치 (기본:GET으로 읽어옮)
+                const response = await fetch(apiTargetURL);
+
+                // 답변자료 전환 
+                const resData = await response.json();
+
+                const userData = resData.Item;
+
+                console.log("Read Fetch Response\n" + JSON.stringify(resData) ); 
+
+                document.getElementById('itemId').innerText = `Id : ${userData.id}`;
+                document.getElementById('userName').innerText = `Name : ${userData.name}`;
+                document.getElementById('PhoneNum').innerText = `Phone : ${userData.phonenum}`;
+
+            }
+            else {
+                alert('잘못된경로입니다.');
+            };
+        };
+   
+        readFetch(itemId);
+
+        const updatePage = (itemId) => {
+            // apiBaseDirName : main.js에 포함된 api기본 디렉토리  ex) phonebook 
+            document.location.href = `/${apiBaseDirName}/updateInfo/?itemId=${itemId}`;
+        };
+
+        // 사용자 정보 삭제
+        const deleteFetch = async (itemId) => {
+            // 삭제API 호출주소 
+            // let apiTargetURL = `https://tdfont1pd2.execute-api.ap-northeast-2.amazonaws.com/items/${itemId}`; 
+            let apiTargetURL = apiInvokeBaseURL + `/items/${itemId}`; 
+ 
+            // alert(`AP11 Delete API-TargetURL=${apiTargetURL}`); 
+
+            if (itemId !== undefined) {
+                const response = await fetch(apiTargetURL, {
+                     method: "DELETE"
+                 });
+
+                alert('삭제 완료!');
+                // apiBaseDirName : main.js에 포함된 api기본 디렉토리  ex) phonebook 
+                document.location.href = `/${apiBaseDirName}`;
+                // OLD document.location.href = "/phonebook";
+            } 
+            else {
+                alert('Id값은 필수입니다.');
+            };
+        };
+
+    </script>
+</body>
+
+</html>

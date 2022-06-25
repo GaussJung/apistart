@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script src="../main.js"></script>
+    <script src="../getInputData.js"></script>
+    <link rel="stylesheet" href="../common.css" type="text/css">
+
+    <title>Add</title>
+</head>
+
+<body>
+
+
+    <div class="bodyContainerWrap" >
+
+        <div  class="bodyContainer" >
+
+            <a href="../" class="basicButton" >
+                    목록으로 
+            </a>
+            <hr> 
+
+            <h2>
+                데이터 추가 
+            </h2>
+
+            <p> ID : <input type="text" id="inputId" /></p>
+            <p> Name : <input type="text" id="inputName" /></p>
+            <p> Phone : <input type="text" id="inputPhone" /></p>
+        
+            <hr>
+            <p>
+                <button onclick="createFetch()">확 인</button>
+            </p>
+
+        </div>
+    </div>
+ 
+        <script>
+ 
+            const createFetch = async () => {
+ 
+                // API호출 주소 : 공통API주소 + 경로 
+                // OLD let apiTargetURL = `https://tdfont1pd2.execute-api.ap-northeast-2.amazonaws.com/items`; 
+                let apiTargetURL = apiInvokeBaseURL + `/items`; 
+    
+                const getData = await getInputData(); // 입력한 새로운 정보 입력
+
+                console.log("ST10. CREATE Input Data\n" + JSON.stringify(getData) ); 
+
+                console.log(`ST20. CREATE API-TargetURL=${apiTargetURL}`); 
+    
+                if (getData !== false) {
+                    
+                    const response = await fetch( apiTargetURL, {
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(getData),
+                        method: "PUT"
+                    }); 
+
+                    // 응답자료 확인 
+                    const resData = await response.json();
+
+                    console.log("ST30. createFetch RESPONSE=\n" + JSON.stringify(resData)  ); 
+    
+                    // 완료 되면 페이지 이동
+                    if (response.ok) {
+                        alert("추가되었습니다.");
+                        // apiBaseDirName : main.js에 포함된 api기본 디렉토리 
+                        document.location.href = `/${apiBaseDirName}/itemInfo/?itemId=${getData.id}`; 
+                    };
+                };
+   
+            };
+            
+ 
+        </script>
+</body>
+
+</html>

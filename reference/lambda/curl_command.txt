@@ -1,0 +1,27 @@
+API Invoke URL : CURL Test 
+
+EC2 or TEST Site : https://reqbin.com/curl
+
+=== $default Stage === 
+▶ 목록출력 
+curl https://createdurl.apiblabla.apidomain.com/items 
+
+▶ 항목추가
+curl  -X PUT https://createdurl.apiblabla.apidomain.com/items 
+  -H "Content-Type: application/json"
+  -d '{ "id":"1040", "name":"박재만","phonenum":"01022221111"}'
+
+▶ 단항목출력 
+curl https://createdurl.apiblabla.apidomain.com/items/1040
+
+▶ 항목삭제
+curl  -X DELETE https://createdurl.apiblabla.apidomain.com/items/1040
+ 
+=== Prod Stage ==
+▶ 목록출력 
+curl https://createdurl.apiblabla.apidomain.com/prod/items 
+
+▶ 항목추가
+curl  -X PUT https://createdurl.apiblabla.apidomain.com/prod/items 
+  -H "Content-Type: application/json"
+  -d '{ "id":"1050", "name":"한미나","phonenum":"01028880055"}'

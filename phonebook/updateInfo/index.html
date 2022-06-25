@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Update</title>
+
+    <script src="../main.js"></script>
+    <script src="../getInputData.js"></script>
+    <link rel="stylesheet" href="../common.css" type="text/css">
+ 
+</head>
+
+<body>
+
+    <div class="bodyContainerWrap" >
+
+        <div  class="bodyContainer" >
+
+            <a href="../" class="basicButton" >
+                    목록으로 
+            </a>
+            <hr> 
+
+            <h2>
+                데이터 수정
+            </h2>
+
+            <p> ID : <input type="text" id="inputId" disabled /></p>
+            <p> Name : <input type="text" id="inputName" /></p>
+            <p> Phone : <input type="text" id="inputPhone" /></p>
+            <hr>
+            <p>
+                <button onclick="updateFetch()">확 인</button>
+            </p>
+
+        </div>
+    </div>
+
+    <script>
+
+        const urlParams = new URL(location.href).searchParams; // URL생성
+
+        const itemId = urlParams.get('itemId') || undefined; // itemId Param data 추출
+
+        // 사용자 정보 읽기
+        const readFetch = async (itemId) => {
+
+            if (itemId !== undefined) {
+
+                // API호출 주소 : 공통API주소 + 경로 
+                // OLD let apiTargetURL = `https://tdfont1pd2.execute-api.ap-northeast-2.amazonaws.com/items/${itemId}`;
+                let apiTargetURL = apiInvokeBaseURL + `/items/${itemId}`; 
+                
+                // alert(`AP11 Delete API-TargetURL=${apiTargetURL}`); 
+                const response = await fetch(apiTargetURL);
+                const resData = await response.json();
+
+                console.log("API 10-2 readFetch RESPONSE=\n" + JSON.stringify(resData)  ); 
+
+                const userData = resData.Item;
+                document.getElementById('inputId').value = userData.id;
+                document.getElementById('inputPhone').value = userData.phonenum;
+                document.getElementById('inputName').value = userData.name;
+
+            } 
+            else {
+                alert('잘못된 경로입니다.');
+            };
+        }; 
+
+        // Read Data 
+        readFetch(itemId);
+
+        // 정보 수정 작업
+        const updateFetch = async () => {
+ 
+            // API호출 주소 : 공통API주소 + 경로 
+            // OLD let apiTargetURL = `https://tdfont1pd2.execute-api.ap-northeast-2.amazonaws.com/items`; 
+            let apiTargetURL = apiInvokeBaseURL + `/items`; 
+  
+            const getData = await getInputData(); // 입력한 새로운 정보 입력
+
+            console.log("ST10. UPDATE Input Data\n" + JSON.stringify(getData) ); 
+
+            console.log(`ST20. UPDATE API-TargetURL=${apiTargetURL}`); 
+ 
+            if (getData !== false) {
+                
+                const response = await fetch( apiTargetURL, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(getData),
+                    method: "PUT"
+                }); 
+
+                // 응답자료 확인 
+                const resData = await response.json();
+
+               console.log("ST30. updateFetch RESPONSE=\n" + JSON.stringify(resData)  ); 
+  
+                // 완료 되면 페이지 이동
+                if (response.ok) {
+                    alert("PhoneBook 수정 완료 되었습니다.");
+                    // apiBaseDirName : main.js에 포함된 api기본 디렉토리  ex) phonebook 
+                    document.location.href = `/${apiBaseDirName}/itemInfo/?itemId=${getData.id}`;
+                };
+            };
+        };
+        
+    </script>
+</body>
+
+</html>
