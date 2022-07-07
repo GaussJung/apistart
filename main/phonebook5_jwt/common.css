@@ -1,0 +1,51 @@
+.bodyContainerWrap {
+    text-align:center; 
+    width: 100%;
+ }
+
+ .bodyContainer{
+    max-width:860px;
+    margin: 0 auto; 
+    text-align:left; 
+ }
+
+ 
+.addBtnArea {
+    margin: 30px auto;
+    width: 600px;
+}
+
+.addBtnArea button {
+    width: 80px;
+
+}
+
+.bodyContainer table {
+    margin: 0 auto;
+    width: 600px;
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+}
+
+.bodyContainer tbody tr {
+    cursor: pointer;
+}
+
+.bodyContainer tbody tr:hover {
+    background-color: #ddd;
+}
+
+.bodyContainer th,
+.bodyContainer td {
+    text-align: center;
+    padding: 10px 0px;
+    width: 200px;
+    border-bottom: 1px solid black;
+}
+
+
+ button {
+    cursor:pointer; 
+ }
+
+ 

@@ -16,8 +16,8 @@
  
     <div  class="bodyContainer" >
 
-        <a href="/" class="basicButton" >
-                Home 
+        <a href="/main" class="basicButton" >
+                Service Home 
         </a>
  
         <hr>
@@ -80,7 +80,13 @@
     var stime; // 시작시간 
     var timeDiff; // 시간차이 
 
-     
+	// Init. 기본디렉토리명 화면출력 
+	function setApiBaseName() {
+		let apiBase = document.getElementById("apiBase"); 
+        let tmpName = apiBaseDirName.replace("main/", "");
+		apiBase.innerText = tmpName; 
+	}; 
+
     // Sort-10 JSON배열 Id정렬 
     function sortResponseIdAsc(paramArr) {
         let sortedArr = paramArr; 

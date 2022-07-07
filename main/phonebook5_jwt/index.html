@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>List</title>
+
+    <script src="/scripts/common.js"></script>
+    <script src="./main.js"></script>
+    <link rel="stylesheet" href="./common.css" type="text/css">
+    
+</head>
+
+<body>
+
+    <div  class="bodyContainerWrap" >
+
+        <div class="bodyContainer">
+ 
+            <div id='homeDiv' style="float:left;width:100px;text-align:left;">
+                <a href="/" >메인홈</a>
+            </div>
+    
+            <div id='serviceDiv' style="float:right;width:100px;text-align:right;">
+                <a href="/main" >API홈</a>
+            </div>
+    
+            <div style='clear:both;'></div>
+            <hr>
+  
+            <div style="text-align:center;width:100%;">
+                <h2 style="margin:0 auto;">
+                    전화번호부 목록 <span id='apiBase'><span>
+                </h2>
+            </div>
+
+            
+            <div class="addBtnArea">
+                <a href="./addItem">
+                    <button>
+                        추가
+                    </button>
+                </a>
+            </div>
+ 
+            <table>
+                <thead>
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Phone 
+                    </th>
+                </thead>
+
+                <tbody id="itemListTbody">
+                </tbody>
+            </table>
+
+            <div style="height:30px;"></div>
+
+        </div>
+        <!-- EOF BodyContainer -->
+    </div>
+    <!-- EOF BodyContainerWrap -->
+ 
+</body>
+
+
+<script>
+
+    console.log("PhoneBook Version 1.19"); 
+    console.log("A1 apiInvokeBaseURL(defined at main.js)\n" + apiInvokeBaseURL); 
+    console.log("A2 apiBaseDirName(defined at main.js)\n" + apiBaseDirName); 
+ 
+    var ftime; // 종료시간 
+    var stime; // 시작시간 
+    var timeDiff; // 시간차이 
+
+	// Init. 기본디렉토리명 화면출력 
+	function setApiBaseName() {
+		let apiBase = document.getElementById("apiBase"); 
+        let tmpName = apiBaseDirName.replace("main/", "");
+		apiBase.innerText = tmpName; 
+	}; 
+
+    // API명칭설정 
+    setApiBaseName(); 
+
+    
+    var accessTokenValue; // 접근토큰값 
+
+    // 로컬스토리지에 저장된 AWT확인 
+    function checkLocalAccessToken() {
+
+        if ( localStorage.getItem("access_Token_Value") !== undefined && localStorage.getItem("access_Token_Value") !== null ) {
+            // 토큰값 있을 경우에 가져옮  
+            accessTokenValue = localStorage.getItem("access_Token_Value"); 
+            console.log("B-1. accessTokenValue=" + accessTokenValue); 
+        }
+        else {
+            accessTokenValue = ""; 
+            console.log("B-2. No Access Token"); 
+        }; 
+
+    }; 
+
+    // LocalStorge JWT확인 
+    checkLocalAccessToken(); 
+ 
+    // Sort-10 JSON배열 Id정렬 
+    function sortResponseIdAsc(paramArr) {
+        let sortedArr = paramArr; 
+        sortedArr.sort(function(A,B){return A.id - B.id }); 
+        return sortedArr; 
+    }; 
+
+
+    // Sort-11 JSON배열 역정렬 
+    function sortResponseIdDesc(paramArr) {
+        let sortedArr = paramArr; 
+        sortedArr.sort(function(A,B){return B.id - A.id }); 
+        return sortedArr; 
+    }; 
+
+
+
+    // 전체 데이터 채우기
+    function fillAllData(responseCount, paramItems) {
+        // 목록에 추가할 부모 태그 선택
+        const tbodyTag = document.getElementById('itemListTbody');
+   
+        // 목록 개수만큼 반복
+        for (let cnt = 0; cnt < responseCount; cnt++) {
+
+            // 목록 개수만큼 Tr태그 생성후 부모태그에 넣어줌
+            const makeTrTag = document.createElement('tr');
+
+            tbodyTag.appendChild(makeTrTag);
+
+
+            // 데이터를 추가할 td태그 생성
+            const makeIdTag = document.createElement('td');
+            const makePhoneTag = document.createElement('td');
+            const makeNameTag = document.createElement('td');
+            const getItemData = paramItems[cnt];  // 사용할 데이터
+
+            makeTrTag.addEventListener('click', (e) => {
+                // apiBaseDirName : main.js에 포함된 api기본 디렉토리  ex) phonebook 
+                document.location.href = `/${apiBaseDirName}/itemInfo/?itemId=${getItemData.id}`; 
+            });
+ 
+            // 데이터에 텍스트를 추가
+            makeIdTag.textContent = getItemData.id;
+            makeNameTag.textContent = getItemData.name;
+            makePhoneTag.textContent = getItemData.phonenum;
+ 
+            // 텍스트를 더한 데이터를 tr태그에 넣어줌
+            makeTrTag.appendChild(makeIdTag);
+            makeTrTag.appendChild(makeNameTag);
+            makeTrTag.appendChild(makePhoneTag);
+            
+        };
+
+    }; 
+
+  
+    // 전체 데이터를 받아와 목록태그들을 추가
+    const getAllData = async () => {
+        // 시작시간 측정 
+        stime = performance.now();
+ 
+        let apiTargetURL = "";  // API호출주소 
+        let errorMsg = "";      // 오류메시지 
+        let apiResponse;        // API데이터응답자료 
+ 
+        // API호출 주소 : 공통API주소 + 경로 
+        apiTargetURL = apiInvokeBaseURL + `/items`;    
+        //  apiTargetURL = `https://tdfont1pd2.execute-api.ap-northeast-2.amazonaws.com/items`;
+
+        if ( accessTokenValue.length == 0 ) {
+            // 기본 토큰 없는 경우 
+            try {
+                apiResponse = await fetch(apiTargetURL); 
+            }
+            catch(ex) {
+                console.log("T1-ERROR=" + ex); 
+            }; 
+        }
+        else {
+
+            try {
+                let myHeaders = new Headers();
+                // 헤더 설정 
+                myHeaders.append("Authorization", accessTokenValue); 
+                
+                let  requestOptions = {
+                    method: 'GET',
+                    headers: myHeaders
+                };
+                // 응답자료 받기 (토큰)
+                apiResponse = await fetch(apiTargetURL, requestOptions); 
+            }
+            catch(ex) {
+                console.log("T2-ERROR=" + ex); 
+            }; 
+ 
+        }; 
+
+ 
+        if ( apiResponse.ok === true ) {
+                // API 정상동작진행 
+            console.log(apiResponse);
+            console.log(`OT1-A1. Success status: ${apiResponse.status}`);
+            let resData = await apiResponse.json();     // 응답자료 JSON전환 
+            let responseOut = JSON.stringify(resData);  // 응답자료 문자열화 
+            let userData = resData.Item;                // 단항목 데이터 가져오기 
+            console.log("OT1-A2 successMsg responseOut=" + responseOut); 
+            console.log("OT1-A3 List Fetch Response\n" + JSON.stringify(resData) ); 
+ 
+            // ============= START OF ID기준정렬 ==================== 
+            // id기준정렬 
+            // console.log("ITEM-BEFORE\n" + JSON.stringify(resData.Items) ); 
+            let itemArr  = sortResponseIdAsc(resData.Items); 
+            // console.log("ITEM-AFTER\n" + JSON.stringify(itemArr) ); 
+            // 응답데이터 정렬데이터로 변경 
+            resData.Items = itemArr; 
+            // ============= END OF ID기준정렬 ==================== 
+            // 테이블 채우기 (응답수량, 항목정보 )
+            fillAllData(resData.Count, resData.Items); 
+         }
+         else {
+            // API 호출불가 
+            console.log(apiResponse);
+            console.log(`OT1-A4. Fail status: ${apiResponse.status}`);
+            // 에러메시지 출력후 홈으로 이동 
+            checkMessageGoHome(apiResponse); 
+            return false;
+            // throw new Error(`OT1-B. Error! status: ${apiResponse.status}`);
+         };
+
+      
+
+        // 종료시간측정 
+        ftime = performance.now();
+        timeDiff = ftime - stime; 
+		console.log(`##### Execution Time : ${timeDiff}ms`); 		
+
+    };
+
+    // 모든 데이터 가져오기 
+    getAllData();
+
+</script>
+
+</html>

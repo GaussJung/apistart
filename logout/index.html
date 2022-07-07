@@ -1,0 +1,27 @@
+<html>
+
+    <head>
+
+        <meta charset="UTF-8">
+ 
+        <title>Log-Out</title>
+    
+     </head>
+
+  <body>
+
+
+    <div class="bodyContainer" >
+ 
+    </div>
+ 
+      <script>
+            localStorage.removeItem("access_Token_Value"); 
+            // alert("Log-Out Success!!"); 
+            // 메인화면 으로 이동 (접속토근 삭제)
+            location.replace("/"); 
+      </script>
+
+  </body>
+</html>
+

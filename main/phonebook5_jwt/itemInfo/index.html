@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+    <title>Read Item</title>
+
+    <script src="/scripts/common.js"></script>
+    <script src="../main.js"></script>
+    <script src="../getInputData.js"></script>
+    <link rel="stylesheet" href="../common.css" type="text/css">
+
+</head>
+
+<body>
+
+    
+    <div class="bodyContainerWrap" >
+
+        <div  class="bodyContainer" >
+
+            <a href="../" class="basicButton" >
+                    목록으로 
+            </a>
+            <hr> 
+
+            <h2>
+                전화번호부 Information 
+            </h2>
+            <div class="userInfoArea">
+                <p id="itemId"></p>
+                <p id="userName"></p>
+                <p id="PhoneNum"></p>
+            </div>
+            <div class="itemInfoBtnArea">
+                <button onclick="updatePage(itemId)">수정</button>
+                <button onclick="deleteFetch(itemId)">삭제</button>
+            </div>
+
+
+        </div>
+    </div>
+ 
+
+    <script>
+ 
+        console.log("API Read Detail 1.24");
+
+        const urlParams = new URL(location.href).searchParams; // URL생성
+        const itemId = urlParams.get('itemId') || undefined; // itemId Param data 추출
+ 
+        var accessTokenValue; // 접근토큰값 
+
+        // 로컬스토리지에 저장된 AWT확인 
+        function checkLocalAccessToken() {
+
+            if ( localStorage.getItem("access_Token_Value") !== undefined && localStorage.getItem("access_Token_Value") !== null ) {
+                // 토큰값 있을 경우에 가져옮  
+                accessTokenValue = localStorage.getItem("access_Token_Value"); 
+                console.log("B-1. accessTokenValue=" + accessTokenValue); 
+            }
+            else {
+                accessTokenValue = ""; 
+                console.log("B-2. No Access Token"); 
+            }; 
+
+        }; 
+
+        // LocalStorge JWT확인 
+        checkLocalAccessToken(); 
+ 
+        // 사용자 정보 읽기
+        const readFetch = async (itemId) => {
+            
+            let apiTargetURL = "";  // API호출주소 
+            let errorMsg = "";      // 오류메시지 
+            let apiResponse;        // API데이터응답자료 
+ 
+            if (itemId !== undefined) {
+                // API호출 주소 : 공통API주소 + 경로 
+                // OLD let apiTargetURL = `https://tdfont1pd2.execute-api.ap-northeast-2.amazonaws.com/items/${itemId}`;
+                apiTargetURL = apiInvokeBaseURL + `/items/${itemId}`;  
+ 
+                if ( accessTokenValue.length == 0 ) {
+                    // 기본 토큰 없는 경우 
+                    try {
+                        apiResponse = await fetch(apiTargetURL); 
+                    }
+                    catch(ex) {
+                        console.log("ERROR=" + ex); 
+                        errorMsg = ex;
+                    }; 
+ 
+                }
+                else {
+                    // 응답자료 받기 (using Access토큰)
+                    try {
+                        let myHeaders = new Headers();
+                        // 헤더 설정 
+                        myHeaders.append("Authorization", accessTokenValue); 
+                        
+                        let  requestOptions = {
+                            method: 'GET',
+                            headers: myHeaders
+                        };
+                        // API응답자료Fetch
+                        apiResponse = await fetch(apiTargetURL, requestOptions); 
+                    }
+                    catch(ex) {
+                        console.log("ERROR=" + ex); 
+                        errorMsg = ex;
+                    }; 
+
+                }; 
+
+           
+                if ( apiResponse.ok === true ) {
+                     // API 정상동작진행 
+                    console.log(apiResponse);
+                    console.log(`OT1-A1. Success status: ${apiResponse.status}`);
+                    let resData = await apiResponse.json();     // 응답자료 JSON전환 
+                    let responseOut = JSON.stringify(resData);  // 응답자료 문자열화 
+                    let userData = resData.Item;                // 단항목 데이터 가져오기 
+                    console.log("OT1-A2 successMsg responseOut=" + responseOut); 
+                    console.log("OT1-A3 Read Fetch Response\n" + JSON.stringify(resData) ); 
+                    document.getElementById('itemId').innerText = `Id : ${userData.id}`;    
+                    document.getElementById('userName').innerText = `Name : ${userData.name}`;   
+                    document.getElementById('PhoneNum').innerText = `Phone : ${userData.phonenum}`;  
+                 }
+                 else {
+                    // API 호출불가 
+                    console.log(apiResponse);
+                    console.log(`OT1-A. Fail status: ${apiResponse.status}`);
+                    // 에러메시지 출력후 홈으로 이동 
+                    checkMessageGoHome(apiResponse); 
+                    return false;
+                    // throw new Error(`OT1-B. Error! status: ${apiResponse.status}`);
+                 };
+
+            }
+            else {
+                alert('E-02. 잘못된 경로입니다.');
+            };
+        };
+        
+        // 데이터 읽기 호출 
+        readFetch(itemId);
+
+        const updatePage = (itemId) => {
+            // apiBaseDirName : main.js에 포함된 api기본 디렉토리  ex) phonebook 
+            document.location.href = `/${apiBaseDirName}/updateInfo/?itemId=${itemId}`;
+        };
+
+        // 사용자 정보 삭제
+        const deleteFetch = async (itemId) => {
+ 
+            let apiTargetURL = "";  // API호출주소 
+            let errorMsg = "";      // 오류메시지 
+            let apiResponse;        // API데이터응답자료 
+
+            if (itemId !== undefined) {
+                // alert(`AP11 Delete API-TargetURL=${apiTargetURL}`); 
+                // let apiTargetURL = `https://tdfont1pd2.execute-api.ap-northeast-2.amazonaws.com/items/${itemId}`; 
+                apiTargetURL = apiInvokeBaseURL + `/items/${itemId}`; 
+ 
+                if ( accessTokenValue.length == 0 ) {
+                    // 기본 토큰 없는 경우 
+                    try {
+                        apiResponse = await fetch(apiTargetURL, {
+                            method: "DELETE"
+                        });
+                    }
+                    catch(ex) {
+                        console.log("ERROR=" + ex); 
+                        errorMsg = ex;
+                    }; 
+                }
+                else {
+                    // 응답자료 받기 (using Access토큰)
+                    try {
+                        let myHeaders = new Headers();
+                        myHeaders.append("Authorization", accessTokenValue);  // 헤더 설정 
+
+                        let  requestOptions = {
+                            method: 'DELETE',
+                            headers: myHeaders
+                        };
+
+                        apiResponse = await fetch(apiTargetURL, requestOptions);  // API응답자료Fetch
+                    }
+                    catch(ex) {
+                        console.log("ERROR=" + ex); 
+                        errorMsg = ex;
+                    }; 
+                }; 
+ 
+ 
+                if ( apiResponse.ok === true ) {
+                     // API 정상동작진행 
+                    console.log(apiResponse);
+                    console.log(`OT1-A1. Success status: ${apiResponse.status}`);
+                    let resData = await apiResponse.json();     // 응답자료 JSON전환 
+                    let responseOut = JSON.stringify(resData);  // 응답자료 문자열화 
+                    console.log("A-2 successMsg responseOut=" + responseOut); 
+                    alert('삭제 완료!' + responseOut);
+                    // apiBaseDirName : main.js에 포함된 api기본 디렉토리  ex) phonebook 
+                    location.replace(`/${apiBaseDirName}`);
+                 }
+                 else {
+                    // API 호출불가 
+                    console.log(apiResponse);
+                    console.log(`OT1-A. Fail status: ${apiResponse.status}`);
+                    // 에러메시지 출력후 홈으로 이동 
+                    checkMessageGoHome(apiResponse); 
+                    return false;
+                    // throw new Error(`OT1-B. Error! status: ${apiResponse.status}`);
+                 };
+
+            } 
+            else {
+                alert('E-02. 잘못된 경로입니다.');
+            };
+        };
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+     <meta charset="UTF-8">
+     <title>스트로베리 배송서비스</title>
+     <script src="/scripts/common.js"></script>
+     <style>
+
+        body {
+          text-align:center; 
+        }
+
+        button {
+          min-width:240px;
+          cursor:pointer;
+        }
+
+        .bodyContainer {
+          max-width:860px;
+          margin:0 auto;
+        }
+
+     </style>
+  </head>
+  <body>
+    
+    <div class="bodyContainer" >
+
+         <div id='loginDiv' style="float:right;width:100px;text-align:right;">
+            <a href="https://strawberry.auth.ap-northeast-2.amazoncognito.com/login?client_id=55pp6tgqkpjn51adlt56uuir5h&response_type=token&scope=email+openid+profile&redirect_uri=https://www.mydomain.com" >로그인</a>
+         </div>
+
+         <div id='logoutDiv' style="float:right;width:100px;text-align:right;">
+            <a href="https://strawberry.auth.ap-northeast-2.amazoncognito.com/logout?client_id=55pp6tgqkpjn51adlt56uuir5h&logout_uri=https://www.mydomain.com/logout" >로그아웃</a>
+        </div>
+
+        <div id='serviceDiv' style="float:left;width:100px;text-align:left;">
+            <a href="/main" >API목록</a>
+        </div>
+
+        <div style='clear:both;'></div>
+        <hr>
+
+        <h1>딸기나라 배송서비스</h1>
+        <br>
+        <img src="./images/logo_strawberry.jpg">
+        <br>
+        <hr>
+
+        <div style="background:#555555;border:#222222 1px solid;">
+          <ul style="text-align:left;color:#FFFFFF;" >
+            <li>싱싱한 과일을 가까운 과일가게에서 배송해 드립니다!</li>
+            <li>다양한 과일의 모든것을 전해드립니다.</li>
+            <li>내 몸에 맞는 과일을 선호도 조사를 통해 찾아드립니다.</li>
+          </ul>
+
+        </div>
+
+        <hr>
+        <div style="color:blue;font-size:0.95em;">
+          © 20XX. StrawBerry Co,Ltd.ALL RIGHTS RESERVED</p>
+        <div>
+    </div>
+ 
+    <script>
+
+        console.log("PhoneBookSvc V1.92");
+ 
+        // V10-A. 로그인출력 : 세션키가 없는 경우
+        function setLogInView() {
+            document.getElementById("loginDiv").style.display  = "block";      // 로그인 출력 
+            document.getElementById("logoutDiv").style.display = "none";       // 로그아웃 감춤 
+            document.getElementById("serviceDiv").style.display = "none";      // 서비스이동 감춤 
+        }; 
+
+        // V10-B. 로그아웃출력 : 세션키가 있는 경우 
+        function setLogOutView() {
+            document.getElementById("loginDiv").style.display  = "none";        // 로그인 감춤 
+            document.getElementById("logoutDiv").style.display = "block";       // 로그아웃 출력 
+            document.getElementById("serviceDiv").style.display = "block";      // 서비스이동 출력 
+        }; 
+        
+        let accessTokenValue = getQueryHashParam("access_token"); 
+        console.log( "TT-2. accessTokenValue=" + accessTokenValue );
+ 
+        //  F20. 접근토근이 있는지의 여부를 확인하기 위해서 로컬스토리지 체크 
+        if ( accessTokenValue === "" && localStorage.getItem("access_Token_Value") !== undefined && localStorage.getItem("access_Token_Value") !== null ) {
+            // 세션에 저장된 토큰값 있을 경우에 가져옮 (홈주소에  토큰없는경우 ) 
+            accessTokenValue = localStorage.getItem("access_Token_Value"); 
+            console.log("Init-2-1 local accessTokenValue=" + accessTokenValue); 
+            setLogOutView();  // 세션키가 있으므로 로그아웃출력, 로그인숨김  
+        }
+        else {
+            console.log("Init-2-2 no X local accessTokenValue"); 
+            // 초기토근 확인 
+            function checkInitAccessToken() {
+
+                if ( accessTokenValue !== undefined && accessTokenValue !== null && accessTokenValue.length > 0 ) {
+                    // 토큰값 있을 경우에 저장함 
+                    localStorage.setItem("access_Token_Value", accessTokenValue); 
+                    location.replace("/"); 
+                }
+                else {
+                    setLogInView();  // 세션키가 없으므로 로그아웃숨김, 로그인출력   
+                    console.log("A-2. No Access Token"); 
+                }; 
+
+            }; 
+
+            // JWT확인 
+            checkInitAccessToken(); 
+ 
+        };
+ 
+    </script> 
+
+  </body>
+
+</html>
+

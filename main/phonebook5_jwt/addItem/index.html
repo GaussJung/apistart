@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add</title>
+
+    <script src="/scripts/common.js"></script>
+    <script src="../main.js"></script>
+    <script src="../getInputData.js"></script>
+    <link rel="stylesheet" href="../common.css" type="text/css">
+
+    <title>Add</title>
+</head>
+
+<body>
+
+
+    <div class="bodyContainerWrap" >
+
+        <div  class="bodyContainer" >
+
+            <a href="../" class="basicButton" >
+                    목록으로 
+            </a>
+            <hr> 
+
+            <h2>
+                데이터 추가 
+            </h2>
+
+            <p> ID : <input type="text" id="inputId" /></p>
+            <p> Name : <input type="text" id="inputName" /></p>
+            <p> Phone : <input type="text" id="inputPhone" /></p>
+        
+            <hr>
+            <p>
+                <button onclick="createFetch()">확 인</button>
+            </p>
+
+        </div>
+    </div>
+ 
+        <script>
+ 
+            console.log("API Add 1.01");
+
+            var accessTokenValue; // 접근토큰값 
+            // 로컬스토리지에 저장된 AWT확인 
+            function checkLocalAccessToken() {
+
+                if ( localStorage.getItem("access_Token_Value") !== undefined && localStorage.getItem("access_Token_Value") !== null ) {
+                    // 토큰값 있을 경우에 가져옮  
+                    accessTokenValue = localStorage.getItem("access_Token_Value"); 
+                    console.log("B-1. accessTokenValue=" + accessTokenValue); 
+                }
+                else {
+                    accessTokenValue = ""; 
+                    console.log("B-2. No Access Token"); 
+                }; 
+
+            }; 
+
+            // LocalStorge JWT확인 
+            checkLocalAccessToken(); 
+
+            const createFetch = async () => {
+ 
+                let apiTargetURL = "";  // API호출주소 
+                let errorMsg = "";      // 오류메시지 
+                let apiResponse;        // API데이터응답자료 
+                
+                // API호출 주소 : 공통API주소 + 경로 
+                // OLD let apiTargetURL = `https://tdfont1pd2.execute-api.ap-northeast-2.amazonaws.com/items`; 
+               apiTargetURL = apiInvokeBaseURL + `/items`; 
+    
+                const getData = await getInputData(); // 입력한 새로운 정보 입력
+
+                console.log("ST10. CREATE Input Data\n" + JSON.stringify(getData) ); 
+
+                console.log(`ST20. CREATE API-TargetURL=${apiTargetURL}`); 
+    
+                if (getData !== false) {
+                     
+                    if ( accessTokenValue.length == 0 ) {
+                        // 기본 토큰 없는 경우 
+                        try {
+                            apiResponse = await fetch( apiTargetURL, {
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify(getData),
+                                method: "PUT"
+                            }); 
+                        }
+                        catch(ex) {
+                            console.log("T-1. ERROR=" + ex); 
+                            errorMsg = ex;
+                        }; 
+                    }
+                    else {
+                        // 응답자료 받기 (using Access토큰)
+                        try {
+                            let myHeaders = new Headers();
+                            // 헤더 설정 
+                            myHeaders.append("Authorization", accessTokenValue); 
+                            myHeaders.append("Content-Type","application/json"); 
+                            
+                            let  requestOptions = {
+                                headers: myHeaders,
+                                body: JSON.stringify(getData),
+                                method: 'PUT' 
+                            };
+                            // API응답자료Fetch
+                            apiResponse = await fetch(apiTargetURL, requestOptions); 
+                        }
+                        catch(ex) {
+                            console.log("T-2. ERROR=" + ex); 
+                            errorMsg = ex;
+                        }; 
+
+                    }; 
+
+ 
+                    // START F1. 응답결과에 따른 후속진행 
+                    if ( apiResponse.ok === true ) {
+                        // API 정상동작진행 
+                        console.log(apiResponse);
+                        console.log(`OT1-A1. Success status: ${apiResponse.status}`);
+                        // 응답자료 확인 
+                        const resData = await apiResponse.json();
+                        console.log("ST30. createFetch RESPONSE=\n" + JSON.stringify(resData)  ); 
+                        alert("추가되었습니다.");
+                        // apiBaseDirName : main.js에 포함된 api기본 디렉토리 
+                        location.replace(`/${apiBaseDirName}/itemInfo/?itemId=${getData.id}`);
+                    }
+                    else {
+                        // API 호출불가 
+                        console.log(apiResponse);
+                        console.log(`OT1-A2. Fail status: ${apiResponse.status}`);
+                        // 에러메시지 출력후 홈으로 이동 
+                        checkMessageGoHome(apiResponse); 
+                        return false;
+                        // throw new Error(`OT1-B. Error! status: ${apiResponse.status}`);
+                    };
+                    // EOF F1. 응답결과에 따른 후속진행 
+ 
+                };
+   
+            };
+            
+ 
+        </script>
+
+</body>
+
+</html>
