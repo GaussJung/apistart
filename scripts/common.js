@@ -25,6 +25,7 @@ function getQueryHashParam(param) {
 
 // 토큰 초기화 이후에 홈으로 이동 
 function  resetTokenAndGoHome() {
+	localStorage.removeItem("id_token_decoded_value");
 	localStorage.removeItem("access_Token_Value"); 
 	// 메인화면 으로 이동 (접속토큰 삭제)
 	location.replace("/");
