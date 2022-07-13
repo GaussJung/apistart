@@ -123,7 +123,19 @@
                     console.log(`OT1-A1. Success status: ${apiResponse.status}`);
                     let resData = await apiResponse.json();     // 응답자료 JSON전환 
                     let responseOut = JSON.stringify(resData);  // 응답자료 문자열화 
-                    let userData = resData.Item;                // 단항목 데이터 가져오기 
+                    let userData; 
+				
+                    if ( resData.Item !== undefined ) {
+                        // item으로 넘어올 경우 
+                        userData = resData.Item;
+                        console.log("Read Fetch Response-A\n" + JSON.stringify(resData) ); 
+                    }
+                    else {
+                        // item으로 넘어오지 않고 데이터 자체로 올경우
+                        userData = resData; 
+                        console.log("Read Fetch Response-B\n" + JSON.stringify(resData) ); 
+                    };
+
                     console.log("OT1-A2 successMsg responseOut=" + responseOut); 
                     console.log("OT1-A3 Read Fetch Response\n" + JSON.stringify(resData) ); 
                     document.getElementById('itemId').innerText = `Id : ${userData.id}`;    
@@ -182,6 +194,7 @@
                     // 응답자료 받기 (using Access토큰)
                     try {
                         let myHeaders = new Headers();
+
                         myHeaders.append("Authorization", accessTokenValue);  // 헤더 설정 
 
                         let  requestOptions = {

@@ -61,7 +61,20 @@
 
                 console.log("API 10-2 readFetch RESPONSE=\n" + JSON.stringify(resData)  ); 
 
-                const userData = resData.Item;
+ 
+				let userData; 
+				
+				if ( resData.Item !== undefined ) {
+					// item으로 넘어올 경우 
+					userData = resData.Item;
+					console.log("Read Fetch Response-A\n" + JSON.stringify(resData) ); 
+				}
+				else {
+					// item으로 넘어오지 않고 데이터 자체로 올경우
+					userData = resData; 
+					console.log("Read Fetch Response-B\n" + JSON.stringify(resData) ); 
+				};
+			 
                 document.getElementById('inputId').value = userData.id;
                 document.getElementById('inputPhone').value = userData.phonenum;
                 document.getElementById('inputName').value = userData.name;

@@ -44,9 +44,11 @@
  
 
     <script>
+	
         const urlParams = new URL(location.href).searchParams; // URL생성
         const itemId = urlParams.get('itemId') || undefined; // itemId Param data 추출
 
+		
         // 사용자 정보 읽기
         const readFetch = async (itemId) => {
             
@@ -62,10 +64,20 @@
                 // 답변자료 전환 
                 const resData = await response.json();
 
-                const userData = resData.Item;
-
-                console.log("Read Fetch Response\n" + JSON.stringify(resData) ); 
-
+				let userData; 
+				
+				if ( resData.Item !== undefined ) {
+					// item으로 넘어올 경우 
+					userData = resData.Item;
+					console.log("Read Fetch Response-A\n" + JSON.stringify(resData) ); 
+				}
+				else {
+					// item으로 넘어오지 않고 데이터 자체로 올경우
+					userData = resData; 
+					console.log("Read Fetch Response-B\n" + JSON.stringify(resData) ); 
+				};
+				
+       
                 document.getElementById('itemId').innerText = `Id : ${userData.id}`;
                 document.getElementById('userName').innerText = `Name : ${userData.name}`;
                 document.getElementById('PhoneNum').innerText = `Phone : ${userData.phonenum}`;
