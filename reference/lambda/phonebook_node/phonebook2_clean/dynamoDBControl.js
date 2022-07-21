@@ -13,7 +13,7 @@ const AWS = require('aws-sdk');
 const dynamo = new AWS.DynamoDB.DocumentClient();  
 
 // Dynamo DB 테이블명
-const dynamoTableName = "phonebook"; 
+const dynamoTableName = "phonebook2"; 
  
 // TR-All. 테이블 전체 스캔 (모두 자료 )
 const dynamoAllRead = async () => {

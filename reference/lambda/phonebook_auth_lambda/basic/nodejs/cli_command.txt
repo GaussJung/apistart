@@ -1,0 +1,5 @@
+함수생성
+aws lambda create-function --function-name phonebook_simple_lambda_authorizer --zip-file fileb://index.zip --handler index.handler --runtime nodejs16.x --role arn:aws:iam::700080009000:role/simple_lambda_role
+
+함수갱신 
+aws lambda update-function-code --function-name phonebook_simple_lambda_authorizer --zip-file fileb://index.zip 
