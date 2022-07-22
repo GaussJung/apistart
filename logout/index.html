@@ -17,7 +17,8 @@
  
       <script>
             localStorage.removeItem("access_Token_Value"); 
-            // alert("Log-Out Success!!"); 
+            localStorage.removeItem("id_token_decoded_value");
+            alert("Log-Out!"); 
             // 메인화면 으로 이동 (접속토근 삭제)
             location.replace("/"); 
       </script>

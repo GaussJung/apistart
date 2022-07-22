@@ -27,15 +27,15 @@
     <div class="bodyContainer" >
 
          <div id='loginDiv' style="float:right;width:100px;text-align:right;">
-            <a href="https://strawberry.auth.ap-northeast-2.amazoncognito.com/login?client_id=55pp6tgqkpjn51adlt56uuir5h&response_type=token&scope=email+openid+profile&redirect_uri=https://www.mydomain.com" >로그인</a>
+            <a href="https://phonebooks4.auth.ap-northeast-2.amazoncognito.com/login?client_id=fvgftc5ov0bvv7a9jfmrv2e3l&response_type=token&scope=email+openid&redirect_uri=https://svcs4.nuriblock.com/" >로그인</a>
          </div>
 
          <div id='logoutDiv' style="float:right;width:100px;text-align:right;">
-            <a href="https://strawberry.auth.ap-northeast-2.amazoncognito.com/logout?client_id=55pp6tgqkpjn51adlt56uuir5h&logout_uri=https://www.mydomain.com/logout" >로그아웃</a>
+            <a href="https://phonebooks4.auth.ap-northeast-2.amazoncognito.com/logout?client_id=fvgftc5ov0bvv7a9jfmrv2e3l&logout_uri=https://svcs4.nuriblock.com/logout" >로그아웃</a>
         </div>
 
         <div id='serviceDiv' style="float:left;width:100px;text-align:left;">
-            <a href="/main" >API목록</a>
+            <a href="/main/phonebook5_jwt" >서비스이동</a>
         </div>
 
         <div style='clear:both;'></div>
@@ -83,6 +83,7 @@
         let accessTokenValue = getQueryHashParam("access_token"); 
         console.log( "TT-2. accessTokenValue=" + accessTokenValue );
  
+  
         //  F20. 접근토근이 있는지의 여부를 확인하기 위해서 로컬스토리지 체크 
         if ( accessTokenValue === "" && localStorage.getItem("access_Token_Value") !== undefined && localStorage.getItem("access_Token_Value") !== null ) {
             // 세션에 저장된 토큰값 있을 경우에 가져옮 (홈주소에  토큰없는경우 ) 
@@ -109,9 +110,45 @@
 
             // JWT확인 
             checkInitAccessToken(); 
- 
+  
         };
  
+ 
+		let id_tokenValue = getQueryHashParam("id_token"); 
+   
+		console.log("TT-4 id_token=\n" + id_tokenValue );
+		
+		//  F17. 로컬에 id_token 저장 
+		if ( id_tokenValue !== undefined && id_tokenValue.length > 0 ) {
+		  console.log(id_tokenValue.split('.'));
+		  let id_tokenArray = id_tokenValue.split('.'); // Header, Payload, Signature 
+		  let id_tokenHeaderDecoded = atob(id_tokenArray[0]);  
+		  let id_tokenPayloadDecoded  = atob(id_tokenArray[1]);  
+		  let id_tokenSignature = id_tokenArray[2]; 
+
+		  let id_token_decoded_json = {}; 
+
+		  id_token_decoded_json.header = id_tokenHeaderDecoded; 
+		  id_token_decoded_json.payload = id_tokenPayloadDecoded;
+
+		  // 로컬ID설정 
+		  localStorage.setItem("id_token_decoded_value", JSON.stringify(id_token_decoded_json));
+		}; 
+
+
+		//  F19. 로컬에 저장된 id_token 확인 
+	   if ( localStorage.getItem("id_token_decoded_value") !== undefined && localStorage.getItem("id_token_decoded_value") !== null ) {
+			// 세션에 저장된 토큰값 있을 경우에 가져옮 (홈주소에  토큰없는경우 ) 
+			let id_token_decoded_value = localStorage.getItem("id_token_decoded_value"); 
+			let id_token_decoded_json = JSON.parse(id_token_decoded_value); 
+			console.log("IDLT-L1. id_tokenHeaderDecoded=" + id_token_decoded_json.header );
+			console.log("IDLT-L2. id_tokenPayloadDecoded=" + id_token_decoded_json.payload );
+
+			let payloadValue = JSON.parse(id_token_decoded_json.payload);
+			let emailValue = payloadValue.email; // id_token_decoded_json.payload.email;
+			console.log("IDLT-L31 emailValue=" + emailValue );
+		};
+
     </script> 
 
   </body>
