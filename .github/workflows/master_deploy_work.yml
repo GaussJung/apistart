@@ -12,17 +12,17 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@master
       
-      # 모든 데이터 삭제 
+      # 모든 데이터 삭제  s3://'${{ secrets.S3_BUCKETNAME }}'   
       - name: Build
-        run: aws s3 rm s3://'${{ secrets.S3_BUCKETNAME }}' --recursive
+        run: aws s3 rm s3://svc3.nuriblock.com  --recursive
 
-      # below S3  is created by JCW 2022. 08 - edit the resoucre   s3://svc3.nuriblock.com 
+      # below S3  is created by JCW 2022. 08 - edit the resoucre   
       - name: Deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws s3 cp  --recursive  --region ap-northeast-2  . s3://${{ secrets.S3_BUCKETNAME }}  --recursive  --exclude ".git/*"  --exclude "reference/*"
+          aws s3 cp  --recursive  --region ap-northeast-2  . s3://svc3.nuriblock.com   --recursive  --exclude ".git/*"  --exclude "reference/*"
 
       # below distribution-id is created by JCW 2022. 08 - edit the resoucre  CLOUDFRONT_DISTRIBUTION_ID  E23DQUPFR317G3 
       - name: CDN_INVALIDATE
