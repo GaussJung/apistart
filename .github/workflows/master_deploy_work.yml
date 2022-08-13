@@ -1,4 +1,4 @@
-name: master_basic_for_S3
+name: master_deploy_work
 
 on:
   push:
@@ -12,7 +12,6 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@master
       
- 
       #- name: Build
       #  run: aws s3 rm s3://svc3.nuriblock.com  --recursive
 
