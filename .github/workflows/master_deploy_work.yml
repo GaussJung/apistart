@@ -14,7 +14,7 @@ jobs:
       
       # 모든 데이터 삭제 
       - name: Build
-        run: aws s3 rm s3://${{ secrets.S3_BUCKETNAME }} --recursive
+        run: aws s3 rm s3://'${{ secrets.S3_BUCKETNAME }}' --recursive
 
       # below S3  is created by JCW 2022. 08 - edit the resoucre   s3://svc3.nuriblock.com 
       - name: Deploy
@@ -30,4 +30,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws cloudfront create-invalidation --distribution-id  ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+          aws cloudfront create-invalidation --distribution-id  '${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}' --paths "/*"
