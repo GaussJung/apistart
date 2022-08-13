@@ -16,12 +16,12 @@ jobs:
       #  run: aws s3 rm s3://svc3.nuriblock.com  --recursive
 
       # 모든 데이터 삭제  s3://'${{ secrets.S3_BUCKETNAME }}'   
-      - name: Truncate 
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          aws s3 rm s3://svc3.nuriblock.com  --recursive
+      #- name: Truncate 
+      #  env:
+      #    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #  run: |
+      #    aws s3 rm s3://svc3.nuriblock.com  --recursive
 
       # below S3  is created by JCW 2022. 08 - edit the resoucre   
       - name: Deploy
