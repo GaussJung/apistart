@@ -56,7 +56,7 @@ function listAlbums() {
                 "<p>Click on an album name to view it.</p>",
                 "<p>Click on the X to delete the album.</p>"
               ])
-              : "<p>You do not have any albums. Please Create album.";
+              : "<p>You do not have any albums. Please Create album!!!.";
 
             // 템플릿 출력 
             let htmlTemplate = [
