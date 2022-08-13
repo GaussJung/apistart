@@ -31,11 +31,10 @@ jobs:
         run: |
           aws s3 cp  --recursive  --region ap-northeast-2  . s3://svc3.nuriblock.com   --recursive  --exclude ".git/*"  --exclude "reference/*"
 
-      # below distribution-id is created by JCW 2022. 08 - edit the resoucre  CLOUDFRONT_DISTRIBUTION_ID  E23DQUPFR317G3 
+      # below distribution-id is created by JCW 2022. 08 - edit the resoucre  
       - name: CDN_INVALIDATE
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
         run: |
-          aws cloudfront create-invalidation --distribution-id  ${{ env.CLOUDFRONT_DISTRIBUTION_ID }}   --paths "/*"
+          aws cloudfront create-invalidation --distribution-id  E23DQUPFR317G3  --paths "/*"
