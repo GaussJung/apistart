@@ -1,7 +1,8 @@
 console.log("S3-picture V2.19");  
 
 // Amazon Cognito 인증 공급자 초기화 
-var albumBucketName = "album.nuriblock.com";  // 버킷명 
+
+var albumBucketName = "repo-album-nuriblock";  // 버킷명  v1.25 album.nuriblock.com 
 var bucketRegion = "ap-northeast-2";  // 리전명 
 var IdentityPoolId = "ap-northeast-2:127866ec-3001-40d7-bd26-45e021e1e773"; // Cognito증명풀Id 
 
