@@ -1,4 +1,4 @@
-# apistart v1.27 
+# apistart v1.28
  
 1. 개요 
 - 기능 : 정적웹구성, APi-Gateway + Lambda + DynamoDB + Cognito 
