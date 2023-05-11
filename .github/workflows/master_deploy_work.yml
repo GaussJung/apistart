@@ -13,20 +13,25 @@ jobs:
         uses: actions/checkout@master
       
       #- name: Build
-      #  run: aws s3 rm s3://svc3.nuriblock.com  --recursive
- 
+      #  run: 
+      # (삭제) aws s3 rm s3://svc3.nuriblock.com  --recursive
+     
       # below S3  is created by JCW 2022. 08 - edit the resoucre   
+      # aws s3 cp --region ap-northeast-2  .  s3://svc3.nuriblock.com  --recursive  --exclude ".git/*"  --exclude "reference/*"    --exclude ".github/*"  --exclude ".gitignore" 
       - name: Deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws s3 cp  --recursive  --region ap-northeast-2  . s3://svc3.nuriblock.com   --recursive  --exclude ".git/*"  --exclude "reference/*"    --exclude ".github/*"  --exclude ".gitignore" 
+          echo "S3_BUCKETNAME : ${{ vars.S3_BUCKETNAME}}"
+          aws s3 cp --region ap-northeast-2  .   ${{ vars.S3_BUCKETNAME}}  --recursive  --exclude ".git/*"  --exclude "reference/*"    --exclude ".github/*"  --exclude ".gitignore" 
 
       # below distribution-id is created by JCW 2022. 08 - edit the resoucre  
+      # (무효화) aws cloudfront create-invalidation --distribution-id  E23DQUPFR317G3  --paths "/*"   --region ap-northeast-2  
       - name: CDN_INVALIDATE
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
+          echo "CLOUDFRONT_DISTRIBUTION_ID : ${{ vars.CLOUDFRONT_DISTRIBUTION_ID}}"
           aws cloudfront create-invalidation --distribution-id  E23DQUPFR317G3  --paths "/*"   --region ap-northeast-2    
