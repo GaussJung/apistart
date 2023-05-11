@@ -34,4 +34,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           echo "CLOUDFRONT_DISTRIBUTION_ID : ${{ vars.CLOUDFRONT_DISTRIBUTION_ID}}"
-          aws cloudfront create-invalidation --distribution-id  E23DQUPFR317G3  --paths "/*"   --region ap-northeast-2    
+          aws cloudfront create-invalidation --distribution-id   ${{ vars.CLOUDFRONT_DISTRIBUTION_ID}}  --paths "/*"   --region ap-northeast-2    
