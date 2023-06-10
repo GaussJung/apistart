@@ -1,0 +1,17 @@
+[
+	{
+		"Statement": "INSERT INTO phonebook VALUE {'id' : '1011', 'name' : '오나라', 'phonenum' : '01010101111' }"
+	},
+	{
+		"Statement": "INSERT INTO phonebook VALUE {'id' : '1012', 'name' : '촉나라', 'phonenum' : '01020201111' }"
+	},
+	{
+		"Statement": "INSERT INTO phonebook VALUE {'id' : '1013', 'name' : '한나라', 'phonenum' : '01030301111' }"
+	},
+	{
+		"Statement": "INSERT INTO phonebook VALUE {'id' : '1014', 'name' : '당나라', 'phonenum' : '01040401111' }"
+	},
+	{
+		"Statement": "INSERT INTO phonebook VALUE {'id' : '1015', 'name' : '청나라', 'phonenum' : '01050501111' }"
+	}
+]
