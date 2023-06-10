@@ -1,14 +1,19 @@
 /*
 Program : 전화번호부 index.Handler 
 Author : C.W.Jung 
-Date : 2022. 06.22 
-Version :1.1 (로그기록추가)
+Date : 2023.05.16
+Version : 1.2 (로그기록추가)
+특징 : Node16 & ARM64 
+호출예시 : apiendpoint/items (전체목록보기)
 */ 
 
 // DynamoDB함수선언 
 const {dynamoCreateItem, dynamoReadItem, dynamoDeleteItem, dynamoAllRead} = require("./dynamoDBControl.js");
 
 exports.handler = async (event, context) => {
+  
+  console.info("Initial Log N16-1 EVENT\n" + JSON.stringify(event, null, 2));
+  
   
   let responseBody;    // 응답정보 ( bodyOut값으로 변환되어 출력됨 )
   let bodyOut;         // Body출력 

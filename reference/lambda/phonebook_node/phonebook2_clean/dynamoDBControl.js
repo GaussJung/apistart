@@ -1,19 +1,22 @@
 /*
 Program : dynamoDB관리자 
 Author : C.W.Jung 
-Date : 2022. 06.22 
-Version : 1.0 
+Date : 2023.05.16 
+Version : 1.01
+참조Document 
+https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html 
+https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/dynamodb-example-dynamodb-utilities.html
 */ 
-
-
+ 
+ 
 // AWS SDK호출 
-const AWS = require('aws-sdk'); 
+const AWS = require('aws-sdk');
 
-// AWS DynamoDB 호출
+// AWS DynamoDB DocumentClient 호출
 const dynamo = new AWS.DynamoDB.DocumentClient();  
-
+ 
 // Dynamo DB 테이블명
-const dynamoTableName = "phonebook2"; 
+const dynamoTableName = "phonebook"; 
  
 // TR-All. 테이블 전체 스캔 (모두 자료 )
 const dynamoAllRead = async () => {
