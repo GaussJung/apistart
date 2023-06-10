@@ -1,7 +1,7 @@
 import boto3;
 
 # DynamoDB 테이블명 
-dynamoTableName = "phonebook22"  
+dynamoTableName = "phonebook"  
 
 client = boto3.resource('dynamodb')  # dynamoDb 연결
 dynamoTable = client.Table(dynamoTableName)  # dynamoTable에 연결
