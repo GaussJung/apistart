@@ -26,19 +26,14 @@ zip myfunction.zip  -r *
 - Lambda CLI 동작 ( myfunction.zip 생성된 것 확인후에 )   
 [node]
 - 함수생성 
-(simple)
-aws lambda create-function \
---function-name func_phonebook_node \
---zip-file fileb://aaa.zip --handler index.handler \
---architectures arm64  --runtime nodejs20.x \
---role arn:aws:iam::569251118950:role/simple_apigateway_lambda_role
-
-(clean)
+(simple--Node16.X SDK V2) : 콘솔에서 진행 
+ 
+(clean--NodeV20.x SDK V3)
 aws lambda create-function \
 --function-name func_phonebook2_node \
 --zip-file fileb://myfunction.zip --handler index.handler \
 --architectures arm64  --runtime nodejs20.x \
---role arn:aws:iam::569251118950:role/simple_apigateway_lambda_role
+--role arn:aws:iam::111122223333:role/simple_apigateway_lambda_role
  
 - 함수수정 (각 디렉토리에서 진행)
 aws lambda update-function-code --function-name func_phonebook_node --zip-file fileb://aaa.zip
@@ -47,28 +42,47 @@ aws lambda update-function-code --function-name func_phonebook2_node --zip-file 
 [python]
 - 함수생성 
 aws lambda create-function --function-name phonebook2_python_function --zip-file fileb://myfunction.zip --handler lambda_function.lambda_handler  --architectures arm64 --runtime python3.9 --role arn:aws:iam::708192160042:role/simple_apigateway_lambda_role 
-aws lambda create-function --function-name func_phonebook2_python --zip-file fileb://myfunction.zip --handler index.handler --architectures arm64  --runtime nodejs20.x --role arn:aws:iam::569251118950:role/simple_apigateway_lambda_role
+aws lambda create-function --function-name func_phonebook2_python --zip-file fileb://myfunction.zip --handler index.handler --architectures arm64  --runtime nodejs20.x --role arn:aws:iam::111122223333:role/simple_apigateway_lambda_role
+
 - 함수수정
 aws lambda update-function-code --function-name func_phonebook2_python  --zip-file fileb://myfunction.zip
 
-2024-07-02T03:29:42.969Z	undefined	ERROR	Uncaught Exception
- 	{"errorType":"ReferenceError","errorMessage":"exports is not defined in ES module scope",
-    "stack":["ReferenceError: exports is not defined in ES module scope","  
-      at file:///var/task/index.mjs:15:1","   
-       at ModuleJob.run (node:internal/modules/esm/module_job:222:25)"," 
-          at async ModuleLoader.import (node:internal/modules/esm/loader:316:24)","    at async _tryAwaitImport (file:///var/runtime/index.mjs:1008:16)","    at async _tryRequire (file:///var/runtime/index.mjs:1057:86)","    at async _loadUserApp (file:///var/runtime/index.mjs:1081:16)","    at async UserFunction.js.module.exports.load (file:///var/runtime/index.mjs:1119:21)","    at async start (file:///var/runtime/index.mjs:1282:23)","    at async file:///var/runtime/index.mjs:1288:1"]}
-INIT_REPORT Init Duration: 373.11 ms	Phase: init	Status: error	Error Type: Runtime.Unknown
-INIT_REPORT Init Duration: 3004.01 ms	Phase: invoke	Status: timeout
+ 
+# S3생성
+ aws s3 mb s3://111122223333-front-phonebook  
 
-
-
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "S3PublicPart",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": ["s3:*"],
+            "Resource": [
+                "arn:aws:s3:::111122223333-front-phonebook",
+                "arn:aws:s3:::111122223333-front-phonebook/*"
+            ]
+        }
+    ]
+}
 
 #  자원삭제
-
 - lambda 삭제  
 [node]
 aws lambda delete-function --function-name func_phonebook_node
 aws lambda delete-function --function-name func_phonebook2_node
+
 [python] 
 aws lambda delete-function --function-name func_phonebook_node
 aws lambda delete-function --function-name func_phonebook2_node
+
+- s3삭제 
+aws s3 rm s3://111122223333-front-phonebook  --recursive 
+aws s3 rb s3://111122223333-front-phonebook 
+
+- dynamodb 삭제 
+aws  dynamodb   delete-table   --table-name   phonebook 
+
+- apigateway 삭제 (콘솔에서 api-id확인후 진행)
+aws apigatewayv2 delete-api   --api-id abcd111e

@@ -1,5 +1,6 @@
 /*
 Title : 전화번호부 index.Handler
+Desc : 교육목적으로 추가한 참조로그는 실제 운영시 제거 필요 
 Author : C.W.Jung 
 Version : 1.4 (로그기록추가)
 AWS-SDK : V3
@@ -7,11 +8,15 @@ Lang/Arch : Node20.x & ARM64
 호출예시 : apigateway-endpoint/items (전체목록보기)
 */ 
 
-// DynamoDB함수선언 
-const {dynamoCreateItem, dynamoReadItem, dynamoDeleteItem, dynamoAllRead} = require("./dynamoDBControl.mjs");
+// DynamoDB함수선언 SDK V2 
+// const {dynamoCreateItem, dynamoReadItem, dynamoDeleteItem, dynamoAllRead} = require("./dynamoDBControl.mjs");
 
-// OLD V2 exports.handler = async (event, context) => { 
+// NEW V3 
+import {dynamoCreateItem, dynamoReadItem, dynamoDeleteItem, dynamoAllRead} from "./dynamoDBControl.mjs";
+ 
+// OLD : SDK V2 exports.handler = async (event, context) => { 
   
+// 핸들러 함수 (Lambda시작점)   
 export const handler = async (event, context) => {
 
   console.info("Initial Log N16-1 EVENT\n" + JSON.stringify(event, null, 2));
@@ -33,7 +38,7 @@ export const handler = async (event, context) => {
   function showEventLog(event) {
     console.info("EVENT\n" + JSON.stringify(event, null, 2));
   }
-
+  
   try {
     // 정상 상태 
     statusCode = 200;
@@ -48,8 +53,11 @@ export const handler = async (event, context) => {
     else {
         console.log("PhoneBook2 STAGE=" + currentStage); 
     }
+    
+    console.log("PhoneBook2 T1 event.routeKey=" + event.routeKey); 
  
     switch (event.routeKey) {
+      
       case "DELETE /items/{id}":
         // C10. 삭제 
         idVal = event.pathParameters.id; 
@@ -73,7 +81,7 @@ export const handler = async (event, context) => {
         // C21. 전체읽기  (GET)
         responseBody = await dynamoAllRead();
         // ------ Record Log ---------- 
-        console.log("C21 GET ALL"); 
+        console.log("C21 After GET ALL"); 
         showEventLog(event); 
         break;
         
