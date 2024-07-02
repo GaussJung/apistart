@@ -1,11 +1,26 @@
-const AWS = require("aws-sdk");
+// Author : C.W.Jung 
+// Title : func_phonebook_node 
 
-const dynamo = new AWS.DynamoDB.DocumentClient();
+// AWS SDK호출 V3
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+
+import {
+  DynamoDBDocumentClient,
+  BatchExecuteStatementCommand,
+} from "@aws-sdk/lib-dynamodb";
+
+const client = new DynamoDBClient({});
+const dynamo = DynamoDBDocumentClient.from(client);
+ 
+// AWS SDK호출 OLD V2 
+// const AWS = require('aws-sdk');
+
+// AWS DynamoDB DocumentClient 호출 OLD V2 
+// const dynamo = new AWS.DynamoDB.DocumentClient();  
 
 const dynamoTableName = "phonebook"; 
 
-exports.handler = async (event, context) => {
-  
+export const handler = async (event, context) => {
   let body;
   let statusCode = 200;
  
@@ -15,7 +30,8 @@ exports.handler = async (event, context) => {
         "Content-Type": "application/json",
   };
  
-  console.info("PhoneBook1 EVENT\n" + JSON.stringify(event, null, 2))
+  
+  console.info("PhoneBook 777 EVENT\n" + JSON.stringify(event, null, 2))
  
   try {
     switch (event.routeKey) {

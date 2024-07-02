@@ -8,12 +8,23 @@ https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.
 https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/dynamodb-example-dynamodb-utilities.html
 */ 
  
- 
-// AWS SDK호출 
-const AWS = require('aws-sdk');
 
-// AWS DynamoDB DocumentClient 호출
-const dynamo = new AWS.DynamoDB.DocumentClient();  
+//  AWS SDK호출 V3
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+
+import {
+  DynamoDBDocumentClient,
+  BatchExecuteStatementCommand,
+} from "@aws-sdk/lib-dynamodb";
+
+const client = new DynamoDBClient({});
+const dynamo = DynamoDBDocumentClient.from(client);
+
+// AWS SDK호출 OLD V2 
+// const AWS = require('aws-sdk');
+
+// AWS DynamoDB DocumentClient 호출 OLD V2 
+// const dynamo = new AWS.DynamoDB.DocumentClient();  
  
 // Dynamo DB 테이블명
 const dynamoTableName = "phonebook"; 

@@ -1,17 +1,19 @@
 /*
-Program : 전화번호부 index.Handler 
+Title : 전화번호부 index.Handler
 Author : C.W.Jung 
-Date : 2023.05.16
-Version : 1.2 (로그기록추가)
-특징 : Node16 & ARM64 
-호출예시 : apiendpoint/items (전체목록보기)
+Version : 1.4 (로그기록추가)
+AWS-SDK : V3
+Lang/Arch : Node20.x & ARM64 
+호출예시 : apigateway-endpoint/items (전체목록보기)
 */ 
 
 // DynamoDB함수선언 
-const {dynamoCreateItem, dynamoReadItem, dynamoDeleteItem, dynamoAllRead} = require("./dynamoDBControl.js");
+const {dynamoCreateItem, dynamoReadItem, dynamoDeleteItem, dynamoAllRead} = require("./dynamoDBControl.mjs");
 
-exports.handler = async (event, context) => {
+// OLD V2 exports.handler = async (event, context) => { 
   
+export const handler = async (event, context) => {
+
   console.info("Initial Log N16-1 EVENT\n" + JSON.stringify(event, null, 2));
   
   

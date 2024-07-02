@@ -1,5 +1,5 @@
 {
-	"TableName": "phonebook3",
+	"TableName": "phonebook",
 	"KeySchema": [
 		{ "AttributeName": "id", "KeyType": "HASH" }
 	],
