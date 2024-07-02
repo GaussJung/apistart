@@ -86,3 +86,6 @@ aws  dynamodb   delete-table   --table-name   phonebook
 
 - apigateway 삭제 (콘솔에서 api-id확인후 진행)
 aws apigatewayv2 delete-api   --api-id abcd111e
+
+- 참조소스 삭제 
+rm -rf ~/apistart 
