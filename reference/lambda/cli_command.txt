@@ -74,8 +74,8 @@ aws lambda delete-function --function-name func_phonebook_node
 aws lambda delete-function --function-name func_phonebook2_node
 
 [python] 
-aws lambda delete-function --function-name func_phonebook_node
-aws lambda delete-function --function-name func_phonebook2_node
+aws lambda delete-function --function-name func_phonebook_python
+aws lambda delete-function --function-name func_phonebook2_python
 
 - s3삭제 
 aws s3 rm s3://111122223333-front-phonebook  --recursive 
