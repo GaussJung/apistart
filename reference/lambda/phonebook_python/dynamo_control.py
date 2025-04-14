@@ -1,3 +1,9 @@
+'''
+Title : 전화번호부DynamoDB Controller
+Version : 1
+Author : C.W.Jung 
+'''
+
 import boto3;
 
 # DynamoDB 테이블명 
@@ -41,3 +47,4 @@ def dynamoUpdateItem(bodyData):
 # 데이터 삭제
 def dynamoDeleteItem(paramId):
     return dynamoTable.delete_item(Key={'id' : paramId})
+

@@ -1,3 +1,12 @@
+'''
+Title : 전화번호부 CRUD (using python)
+Description : Api-Gateway를 통한 dynamoDB연동 (RDB등 기타자원과 연동가능) 
+Author : C.W.Jung 
+Version : 1.5 (로그기록추가)
+Lang/Arch : Python3.13 & ARM64 
+호출예시 : apigateway-endpoint/items (전체목록보기)
+'''
+
 import json
 import hashlib
 import base64
@@ -13,7 +22,7 @@ header =  {
 def lambda_handler(event, context):
   
     # CloudWatch LogGroup에서 확인하기 위한 환경 및 이벤트내용 출력 (실제운영시에는 제외) 
-    print('## ENVIRONMENT VARIABLES')
+    print('## ENVIRONMENT VARIABLES for v1.5')
     print(os.environ)
     print('## EVENT')
     print(event)

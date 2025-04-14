@@ -1,56 +1,55 @@
 
-Lambda를 생성하는 CLI 
+#### Lambda (BackEnd) ### 
 
-1.  NodeJS  ( 14.X or 16.X)
+1.  NodeJS  (Ver 22.X)
 
-- 소스경로로 이동  ( ex : ~/mywork/lambda/phonebook_node/phonebook2_clean )
-cd ~/mywork/lambda/phonebook_node/phonebook2_clean
-
-- 모든파일과 디렉토리 압축 
-zip myfunction.zip  -r * 
-
-- Lambda CLI 동작 ( myfunction.zip 생성된 것 확인후에 )  함수명 : phonebook2_cli_function 
-
-aws lambda create-function --function-name phonebook2_cli_function \
---zip-file fileb://myfunction.zip --handler index.handler --runtime nodejs14.x \
---role arn:aws:iam::700080009000:role/simple_apigateway_lambda_role
-
-2. Python  ( 3.8 or 3.9 ) 
-
-- 소스경로로 이동  ( ex : ~/mywork/lambda/phonebook_python  )
-cd ~/mywork/lambda/phonebook_python 
+- 소스경로로 이동  ( ex : ~/apistart/lambda/phonebook_node/phonebook2_clean )
+cd ~/apistart/lambda/phonebook_node/phonebook2_clean
 
 - 모든파일과 디렉토리 압축 
-zip myfunction.zip  -r * 
-
-- Lambda CLI 동작 ( myfunction.zip 생성된 것 확인후에 )   
-[node]
-- 함수생성 
-(simple--Node16.X SDK V2) : 콘솔에서 진행 
+zip -r myfunction.zip  * 
  
-(clean--NodeV20.x SDK V3)
-aws lambda create-function \
---function-name func_phonebook2_node \
---zip-file fileb://myfunction.zip --handler index.handler \
---architectures arm64  --runtime nodejs20.x \
+- 함수생성 CLI 
+(한줄로 : Window) 
+aws lambda create-function --function-name phonebook2_cli_function --zip-file fileb://myfunction.zip --handler index.handler --runtime nodejs22.x  --architecture arm64 --role arn:aws:iam::111122223333:role/simple_apigateway_lambda_role
+
+(나누어서 : Linux, Mac)
+aws lambda create-function --function-name phonebook2_cli_function \
+--zip-file fileb://myfunction.zip --handler index.handler --runtime nodejs22.x --architecture arm64 \
 --role arn:aws:iam::111122223333:role/simple_apigateway_lambda_role
  
-- 함수수정 (각 디렉토리에서 진행)
-aws lambda update-function-code --function-name func_phonebook_node --zip-file fileb://aaa.zip
-aws lambda update-function-code --function-name func_phonebook2_node --zip-file fileb://myfunction.zip
-
-[python]
-- 함수생성 
-aws lambda create-function --function-name phonebook2_python_function --zip-file fileb://myfunction.zip --handler lambda_function.lambda_handler  --architectures arm64 --runtime python3.9 --role arn:aws:iam::708192160042:role/simple_apigateway_lambda_role 
-aws lambda create-function --function-name func_phonebook2_python --zip-file fileb://myfunction.zip --handler index.handler --architectures arm64  --runtime nodejs20.x --role arn:aws:iam::111122223333:role/simple_apigateway_lambda_role
-
-- 함수수정
-aws lambda update-function-code --function-name func_phonebook2_python  --zip-file fileb://myfunction.zip
-
+- 함수수정 CLI 
+aws lambda update-function-code --function-name phonebook2_cli_function  --zip-file fileb://myfunction.zip
  
-# S3생성
- aws s3 mb s3://111122223333-front-phonebook  
+2. Python  (Ver 3.13 ) 
 
+- 소스경로로 이동  ( ex : ~/apistart/lambda/phonebook_python  )
+cd ~/apistart/lambda/phonebook_python 
+
+- 모든파일과 디렉토리 압축 
+zip -r myfunction.zip   * 
+ 
+- 함수생성 CLI 
+(한줄로 : Window) 
+aws lambda create-function --function-name phonebook2_python_function --zip-file fileb://myfunction.zip --handler lambda_function.lambda_handler  --architecture arm64 --runtime python3.13 --role arn:aws:iam::111122223333:role/simple_apigateway_lambda_role 
+
+(나누어서 : Linux, Mac)
+aws lambda create-function --function-name phonebook2_python_function \
+--zip-file fileb://myfunction.zip --handler lambda_function.lambda_handler  --architecture arm64 --runtime python3.13 \
+--role arn:aws:iam::111122223333:role/simple_apigateway_lambda_role 
+ 
+- 함수수정 CLI 
+aws lambda update-function-code --function-name phonebook2_python_function  --zip-file fileb://myfunction.zip
+ 
+#### S3 StaticWeb(FrontEnd) ### 
+ 
+1. S3생성 CLI (Unique한 속성필요-성명/서비스명/계정명추가)
+aws s3 mb s3://hongkildong-serverless-front-phonebook  
+(혹은)
+aws s3 mb s3://111122223333-serverless-front-phonebook  
+
+2. 정책추가 + Public허용 + 정적웹설정 
+(아래는 정책문자열) 
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -58,31 +57,47 @@ aws lambda update-function-code --function-name func_phonebook2_python  --zip-fi
             "Sid": "S3PublicPart",
             "Effect": "Allow",
             "Principal": "*",
-            "Action": ["s3:*"],
+            "Action": [
+                "s3:DeleteObject",
+                "s3:GetObject",
+                "s3:ListBucket",
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
             "Resource": [
-                "arn:aws:s3:::111122223333-front-phonebook",
-                "arn:aws:s3:::111122223333-front-phonebook/*"
+                "arn:aws:s3:::hongkildong-serverless-front-phonebook",
+                "arn:aws:s3:::hongkildong-serverless-front-phonebook/*"
             ]
         }
     ]
 }
 
-#  자원삭제
+3. 소스수정
+cd ~/apistart/main/phonebook/main.js : API-Gateway 엔드포인트 주소 수정 
+
+4. s3동기화 CLI 
+cd ~/apistart 
+
+aws s3 cp --recursive . s3://hongkildong-serverless-front-phonebook --recursive --exclude ".git/*" --exclude "reference/*" --exclude ".github/*" --exclude ".gitignore"
+
+5. S3 정적페이지 주소에 접속 
+
+
+#  자원삭제 (과금에 영향을 거의 미치지 않지만 필요할 경우) 
 - lambda 삭제  
 [node]
-aws lambda delete-function --function-name func_phonebook_node
-aws lambda delete-function --function-name func_phonebook2_node
-
+aws lambda delete-function --function-name phonebook2_cli_function
+ 
 [python] 
-aws lambda delete-function --function-name func_phonebook_python
-aws lambda delete-function --function-name func_phonebook2_python
+aws lambda delete-function --function-name phonebook2_python_function
 
 - s3삭제 
-aws s3 rm s3://111122223333-front-phonebook  --recursive 
-aws s3 rb s3://111122223333-front-phonebook 
+aws s3 rm s3://hongkildong-serverless-front-phonebook  --recursive 
+aws s3 rb s3://hongkildong-serverless-front-phonebook 
 
 - dynamodb 삭제 
 aws  dynamodb   delete-table   --table-name   phonebook 
+aws  dynamodb   delete-table   --table-name   phonebook2 (추가생성한 항목이 있을 경우)  
 
 - apigateway 삭제 (콘솔에서 api-id확인후 진행)
 aws apigatewayv2 delete-api   --api-id abcd111e

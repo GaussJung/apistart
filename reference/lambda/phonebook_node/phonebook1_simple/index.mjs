@@ -1,5 +1,7 @@
 // Author : C.W.Jung 
-// Title : index.js for func_phonebook_node 
+// Lang : Node14.x ~ Node18.x 
+// AWS-SDK : V2
+// Title : index.mjs for phonebook(dynamoDB) 
 
 const AWS = require("aws-sdk");
 

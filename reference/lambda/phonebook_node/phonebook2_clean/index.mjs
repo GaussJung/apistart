@@ -1,10 +1,10 @@
 /*
-Title : 전화번호부 index.Handler
-Desc : 교육목적으로 추가한 참조로그는 실제 운영시 제거 필요 
+Title : 전화번호부 CRUD (using Node)
+Description : Api-Gateway를 통한 dynamoDB연동 (RDB등 기타자원과 연동가능) 
 Author : C.W.Jung 
-Version : 1.4 (로그기록추가)
+Version : 1.5 (로그기록추가)
 AWS-SDK : V3
-Lang/Arch : Node20.x & ARM64 
+Lang/Arch : Node22.x & ARM64 
 호출예시 : apigateway-endpoint/items (전체목록보기)
 */ 
 

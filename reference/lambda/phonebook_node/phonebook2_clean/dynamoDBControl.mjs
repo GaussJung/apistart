@@ -1,12 +1,13 @@
 /*
 Program : dynamoDB관리자 
 Author : C.W.Jung 
-Lang & SDK : Node20.x / SDK V3 
-Version : 1.2
+Lang & SDK : Node22.x / SDK V3 
+Version : 1.3
 참조Document 
 https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html 
 https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/dynamodb-example-dynamodb-utilities.html
-SDK V3 : https://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/example_dynamodb_Scenario_GettingStartedMovies_section.html 
+SDK V3 : 
+https://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/example_dynamodb_Scenario_GettingStartedMovies_section.html 
 */ 
  
 
