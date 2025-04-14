@@ -1,4 +1,4 @@
-# apistart v2.38 action demo
+# apistart v2.39 serverless + staticweb
  
 1. 개요 
 - 기능 : 정적웹구성, APi-Gateway + Lambda + DynamoDB + Cognito 
