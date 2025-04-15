@@ -1,0 +1,59 @@
+===== S3 Bucket CORS example =======
+
+(Reference)
+https://docs.aws.amazon.com/AmazonS3/latest/userguide/ManageCorsUsing.html
+
+#1. Simple Allow 
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "HEAD",
+            "GET",
+            "PUT",
+            "POST",
+            "DELETE"
+        ],
+        "AllowedOrigins": [
+            "*"
+        ],
+        "ExposeHeaders": [
+            "ETag"
+        ]
+    }
+]
+
+#2. Allow Specific sites   
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET"
+        ],
+        "AllowedOrigins": [
+            "https://www.myservice.com"
+        ],
+        "ExposeHeaders": [],
+        "MaxAgeSeconds": 3000
+    },
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE"
+        ],
+        "AllowedOrigins": [
+            "https://adm.myservice.com"
+        ],
+        "ExposeHeaders": [],
+        "MaxAgeSeconds": 3000
+    }
+]

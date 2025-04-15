@@ -1,0 +1,94 @@
+===== S3 Bucket policy example =======
+The bucket name(abc.myservice.com) will be changed to your bucket name. 
+
+(Reference)
+https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-bucket-policies.html
+
+#1. Simple Read  
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "S3SimpleRead",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": [
+                "arn:aws:s3:::abc.myservice.com",
+                "arn:aws:s3:::abc.myservice.com/*"
+            ]
+        }
+    ]
+}
+
+#2. All Action  
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "S3AllAction",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:*",
+            "Resource": [
+                "arn:aws:s3:::abc.myservice.com",
+                "arn:aws:s3:::abc.myservice.com/*"
+            ]
+        }
+    ]
+}
+
+#3. Specific Actions  
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "S3SpecificActions",
+            "Effect": "Allow",
+            "Principal": "*",
+			"Action": [
+				"s3:DeleteObject",
+				"s3:GetObject",
+				"s3:ListBucket",
+				"s3:PutObject",
+				"s3:PutObjectAcl"
+			],
+            "Resource": [
+                "arn:aws:s3:::abc.myservice.com",
+                "arn:aws:s3:::abc.myservice.com/*"
+            ]
+        }
+    ]
+}
+
+#4. Set Referer 
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "S3LimitReferer",
+			"Effect": "Allow",
+			"Principal": "*",
+			"Action": [
+				"s3:DeleteObject",
+				"s3:GetObject",
+				"s3:ListBucket",
+				"s3:PutObject",
+				"s3:PutObjectAcl"
+			],
+			"Resource": [
+				"arn:aws:s3:::abc.myservice.com",
+				"arn:aws:s3:::abc.myservice.com/*"
+			],
+			"Condition": {
+				"StringLike": {
+					"aws:Referer": [
+						"https://abc.myservice.com/*",
+						"http://abc.myservice.com.s3-website.ap-northeast-2.amazonaws.com/*"
+					]
+				}
+			}
+		}
+	]
+}
+
