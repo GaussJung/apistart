@@ -1,4 +1,4 @@
-# apistart v2.52 serverless + staticweb
+# apistart v2.53 serverless + staticweb
  
 1. 개요 
 - 기능 : 정적웹(S3), APi-Gateway + Lambda + DynamoDB 
