@@ -3,6 +3,10 @@
 ▶ 신뢰관계생성 보유 역할A, B생성 
 ▶ 역할A, B에 정책을 기능에 해당하는 만큼 첨부  
 
+▶ 111122223333 : 콘솔 우측상단에서 계정프로필에서 계정번호 12자리를 확인하여 모두 대체함
+
+vi일 경우 명령어 아래 입력 (512361237123를 나의 실제계정번호로 가정) 
+:%/111122223333/512361237123
 
 --------------- 정책 생성 ------------------- 
 aws iam create-policy --policy-name   svc_log_create_record --policy-document file://policy_svc_log_create_record.json  
@@ -16,9 +20,9 @@ aws iam create-policy --policy-name   svc_apigateway_invoke   --policy-document 
 1) 신뢰관계포함 역할생성 
 aws iam create-role --role-name  simple_lambda_role  --assume-role-policy-document file://trust_lambda.json   
 
-2) 역할에 정책추가 ( 700080009999 : 계정번호에 해당 ) 
-aws iam attach-role-policy --role-name simple_lambda_role  --policy-arn arn:aws:iam::700080009999:policy/svc_lambda_invoke 
-aws iam attach-role-policy --role-name simple_lambda_role  --policy-arn arn:aws:iam::700080009999:policy/svc_log_create_record
+2) 역할에 정책추가 ( 111122223333 : 계정번호에 해당 ) 
+aws iam attach-role-policy --role-name simple_lambda_role  --policy-arn arn:aws:iam::111122223333:policy/svc_lambda_invoke 
+aws iam attach-role-policy --role-name simple_lambda_role  --policy-arn arn:aws:iam::111122223333:policy/svc_log_create_record
  
  
 --------- B. 기본 역할 + DynamoDB + API Gateway ------------
@@ -26,9 +30,9 @@ aws iam attach-role-policy --role-name simple_lambda_role  --policy-arn arn:aws:
 1) 신뢰관계포함 역할생성 
 aws iam create-role --role-name  simple_apigateway_lambda_role  --assume-role-policy-document file://trust_apigateway_lambda.json   
 
-2) 역할에 정책추가 ( 700080009999 : 계정번호에 해당 ) 
-aws iam attach-role-policy --role-name simple_apigateway_lambda_role  --policy-arn arn:aws:iam::700080009999:policy/svc_apigateway_invoke 
-aws iam attach-role-policy --role-name simple_apigateway_lambda_role  --policy-arn arn:aws:iam::700080009999:policy/svc_dynamodb_rw 
-aws iam attach-role-policy --role-name simple_apigateway_lambda_role  --policy-arn arn:aws:iam::700080009999:policy/svc_lambda_invoke 
-aws iam attach-role-policy --role-name simple_apigateway_lambda_role  --policy-arn arn:aws:iam::700080009999:policy/svc_log_create_record
+2) 역할에 정책추가 ( 111122223333 : 계정번호에 해당 ) 
+aws iam attach-role-policy --role-name simple_apigateway_lambda_role  --policy-arn arn:aws:iam::111122223333:policy/svc_apigateway_invoke 
+aws iam attach-role-policy --role-name simple_apigateway_lambda_role  --policy-arn arn:aws:iam::111122223333:policy/svc_dynamodb_rw 
+aws iam attach-role-policy --role-name simple_apigateway_lambda_role  --policy-arn arn:aws:iam::111122223333:policy/svc_lambda_invoke 
+aws iam attach-role-policy --role-name simple_apigateway_lambda_role  --policy-arn arn:aws:iam::111122223333:policy/svc_log_create_record
  

@@ -1,4 +1,4 @@
-# apistart v2.54 serverless + staticweb
+# apistart v2.55 serverless + staticweb
  
 1. 개요 
 - 기능 : 정적웹(S3), APi-Gateway + Lambda + DynamoDB 
@@ -13,3 +13,5 @@
 - lambda : ~/reference/lambda
 - s3 : ~/reference/bucket
 
+4. 메뉴얼
+~/reference/aws_dynamo_V0.0.pdf 
